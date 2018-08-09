@@ -1,160 +1,188 @@
-function Game(){
-	this.screen = "";  //屏幕
- 	this.keys = ""; //按键
-	this.status = "";  //游戏状态  开始||暂停
-	this.music = ""; //游戏背景音乐
-	this.gameOver = ""; //弹框
-	this.btn = "";  //按键
-	this.life = "";  //生命值
-	this.source = ""; //积分
-	this.letterObjs = {} //字母对象
-	this.letter = "";
-	this.sudu = 10;
-	this.zezhao = "";
-	this.span = "";
-	
-	this.audio1 = "";
-	this.audio2 = "";
-	this.defaultLife = 1;
-	this.num = ""
-	// {
-	// 	A:{top:10,left:10;node:<div></div>,},
-	//     B:{top:10,left:10;node:<div></div>,},
-	//	C:{top:10,left:10;node:<div></div>,},
-	// 	D:{top:10,left:10;node:<div></div>,},
-	// }
-}
-Game.prototype={
-	createLetter:function(num=1){
-		this.num = num;
-		for(let i=0;i<num;i++){
-			let div = document.createElement("div");
-			div.className = "letter";
-			//背景图片随机
-			let imgName;
-			do{
-				let charCode = Math.floor(Math.random()*26+65);
-				imgName= String.fromCharCode(charCode);
-			}while(this.letterObjs[imgName])
-			
-			div.style.backgroundImage = `url(img/A_Z/${imgName}.png)`;
-	 		//位置随机  top left
-	 		let LeftValue;
-	 		do{
-	 			console.log(this.screen.offsetWidth);
-	 			LeftValue = Math.floor(Math.random()*(this.screen.offsetWidth-this.letter.offsetWidth));
-	 		}while(this.isOK(LeftValue))
-	 		
-	 		div.style.left = LeftValue+"px";
+//类的声明方式
+class Game{
+    constructor(){
+        this.screen="";
+        this.life="";
+		this.point="";
+		this.start="";
+		this.letterBox=[];
+        //存储该字符的字符，top  left,节点
+		this.letterWidth="0.53";
+		this.t="";
+		this.btn=document.querySelectorAll(".btn");
+		this.zhezhao=""
+		this.gameOver=""
+		this.btn2=""
+		this.bgMusic=""
+		this.c=""
+		this.audio1=""
+		this.audio2=""
+    }
+    init(){
+    	//初始化
+        this.screen="";
+        this.life="";
+        this.point="";
+        this.start="";
+        this.letterBox=[];
 
-	 		let TopValue =  Math.floor(Math.random()*(100));
-	 		div.style.top = TopValue+"px";
-			this.screen.appendChild(div);
-			this.letterObjs[imgName] = {top:TopValue,left:LeftValue,node:div};
-		}
-	},
-	run:function(){
-		//run方法主要作用是让字母下落
-		this.t = setInterval(()=>{
-			for(let i in this.letterObjs){
-				let obj = this.letterObjs[i];
-				obj.top+=this.sudu;
-				if(obj.top>this.screen.offsetHeight){
 
-					this.life.innerText --;
-					if(this.life.innerText<=0){
-						this.pause();
-						return;
-					}
-					//删除并创建元素
-					this.screen.removeChild(this.letterObjs[i].node);
-					delete this.letterObjs[i];
+    }
+
+
+    //设置下落字母数
+    createLetter( num=1 ){
+    	//创建字符
+    	//1.保存到数据中
+    	//2.插入到页面中
+		//字母重复重叠
+    	for(let i=0;i<num;i++){
+    		let obj={};
+    		let name="";
+    		do{
+    			let as=Math.floor(Math.random()*26+65);
+    			name=String.fromCharCode(as);
+    		}while(this.isExit(name));
+    		let div=document.createElement("div");
+    		div.className="letter";
+    		div.style.backgroundImage=`url("img/A_Z/${name}.png")`;
+    		let top=0.9;
+    		div.style.top=top+"rem";
+    		let left="";
+    		do{
+    			left=Math.random()*5.7+0.6;
+    		}while(this.isRepeat(left));
+    		//判断是否重叠
+    		div.style.left=left+"rem";
+    		this.screen.appendChild(div);
+    		//保存数据
+    		obj.name=name;
+    		obj.left=left;
+    		obj.top=top;
+    		obj.node=div;
+    		this.letterBox.push(obj);
+            // console.log(this.letterBox);
+        }
+    }
+
+
+    //去重
+    isExit(name){
+    	//判断数组中是否有重复的字符
+    	for(let item of this.letterBox){
+    		if (name==item.name) {
+    			return true;
+    		}
+    	}
+        return false;
+    }
+    isRepeat(left){
+    	for(let item of this.letterBox){
+            // Math.abs()绝对值
+            if ( Math.abs(left-item.left)<this.letterWidth ) {
+    			return true;
+    		}
+    	}
+        return false;
+    }
+
+
+
+
+    //字母下落
+    run(){
+
+    	//生命值，点击字母消失
+        let sm=10;
+    	//let that=this;//因为function函数下的this指向的是window，因此要定义一个that来保存this。箭头函数则不用，箭头函数的this指向上下文的this
+    	this.t=setInterval(()=>{
+			this.letterBox.forEach((item,index)=>{
+				item.top+=0.1;
+                if (item.top>=7.94) {
+                	--sm;
+                	this.screen.removeChild(item.node);
+					this.letterBox.splice(index,1);//删除信息
 					this.createLetter();
+					this.life.innerText=sm;
+					if (sm<=0) {
+						this.zhezhao.style.display="block";
+						this.gameOver.innerText=dfNum;
+						clearInterval(this.t);
+					}
+                }
+				item.node.style.top=item.top+"rem";
+            })
+        },200)
 
-					
-					return;
-				}
-				obj.node.style.top = obj.top + "px";
+		//键盘事件，得分
+        let dfNum = 0
+        this.btn.forEach((item,index)=>{
+            //箭头函数
+            item.ontouchstart=( (item)=> {
+                //选择目标事件源
+                item.target.style.transform="scale(0.8)";
+                this.audio2.pause();
+                this.letterBox.forEach( (e,index)=> {
+                    if (item.target.innerText==e.name){
+                        ++dfNum;
+                        this.screen.removeChild(e.node);
+                        this.letterBox.splice(index,1)
+                        this.createLetter();
+                        //得分
+                        this.point.innerText=dfNum;
+                    }
+                })
+                // console.log(this.point.innerText);
+            })
+            item.ontouchend=function (item) {
+                item.target.style.transform="scale(1)";
+            }
+        })
 
-			}
-		},100)
-	},
-	isOK:function(left){
-		// true   重复
-		// false  不重复
-		for(let i in this.letterObjs){
-			let oldLeft = this.letterObjs[i].left;
-			if(Math.abs(oldLeft-left)<this.letter.offsetWidth){
-				return true;
-			}
-		}
-		return false;
-	},
-	pause:function(){
-		clearInterval(this.t);
+		//点击赞听
+        this.c.onclick = ()=> {
+            if (this.c.className=="c") {
+                this.c.classList.add("zt");
+                clearInterval(this.t)
+            }else {
+                this.c.classList.remove("zt");
+                this.t=setInterval(()=>{
+                    this.letterBox.forEach((item,index)=>{
+                        item.top+=0.1;
+                        if (item.top>=7.94) {
+                            --sm;
+                            this.screen.removeChild(item.node);
+                            this.letterBox.splice(index,1);//删除信息
+                            this.createLetter();
+                            this.life.innerText=sm;
+                            if (sm<=0) {
+                                this.zhezhao.style.display="block";
+                                this.gameOver.innerText=dfNum;
+                                clearInterval(this.t);
+                            }
+                        }
+                        item.node.style.top=item.top+"rem";
+                    })
+                },200)
+            }
+        }
 
-		//初始化各种参数
-		for(let i in this.letterObjs){
-			this.screen.removeChild(this.letterObjs[i].node);
-		}
-		this.letterObjs = {};
-		this.btn.innerText = "重新开始";
-		this.span.innerText = this.source.innerText;
-		this.source.innerText = 0;
-		this.life.innerText = this.defaultLife;
-		this.gameOver.classList.add("gameOverActive");
-		this.status.classList.add("pause");
-		this.zezhao.style.display = 'block';
-	},
-	keyTouchstart:function(){
-		//添加按键按下事件
-		this.keys.forEach((item)=>{
-			item.addEventListener("touchstart",()=>{
-				this.audio2.play();
-				let letter = item.innerText;//获取按下字母
-				if(this.letterObjs[letter]){
-					this.screen.removeChild(this.letterObjs[letter].node);
-					this.source.innerText++;
-					delete this.letterObjs[letter];
-				}
 
-			})
-		})
-		this.status.addEventListener("touchstart",()=>{
-			if(this.status.className=="status"){
-				this.stop();
-				this.status.classList.add("pause");
-			}else{
-				this.run();
-				this.status.className="status"
-			}
-		}),
-		this.btn.addEventListener("touchstart",()=>{
-			this.status.classList.remove("pause");
-			this.gameOver.classList.remove("gameOverActive");
-			this.zezhao.style.display = 'none';
-			if(this.btn.innerText=="重新开始"){
-				this.createLetter(this.num);
-				this.run();
-			}else{
-				this.run();
-			}
-		})
-		this.music.addEventListener("touchstart",()=>{
-			if(this.music.className=="music"){
-				this.music.classList.add("musicActive");
-				this.audio1.pause();
-			}else{
-				this.music.classList.remove("musicActive");
-				this.audio1.play();
-			}
-		})
-	},
-	stop:function(){
-		clearInterval(this.t);
-		this.status.classList.add("pause");
-		this.gameOver.classList.add("gameOverActive");
-		this.zezhao.style.display = 'block';
-		this.btn.innerText="继续";
+        //背景音乐开关
+        this.bgMusic.onclick = ()=> {
+            if (this.bgMusic.className=="bgMusic") {
+                this.bgMusic.classList.add("bgMusic_guan");
+                this.audio1.pause();
+                this.audio2.pause();
+            }else {
+                this.bgMusic.classList.remove("bgMusic_guan")
+                this.audio1.play();
+                this.audio2.play();
+            }
+        }
+
+
+
 	}
+
 }

@@ -1,62 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
-	<title>打字游戏</title>
-	<script src="js/rem.js"></script>
-	<link rel="stylesheet" href="css/index.css">
-	<script src="js/game.js"></script>
-	<script src="js/index.js"></script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/index.css">
+    <meta name="viewport" content="width=device-width">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <script src="js/rem.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/game.js"></script>
 </head>
 <body>
-	<div class="screen">
-		<div class="letter1"></div>
-	</div>
-	<div class="keyArea">
-		<div class="keyCon">
-			<div class="key">Q</div>
-			<div class="key">W</div>
-			<div class="key">E</div>
-			<div class="key">R</div>
-			<div class="key">T</div>
-			<div class="key">Y</div>
-			<div class="key">U</div>
-			<div class="key">I</div>
-			<div class="key">O</div>
-			<div class="key">P</div>
-			<div class="key">A</div>
-			<div class="key">S</div>
-			<div class="key">D</div>
-			<div class="key">F</div>
-			<div class="key">G</div>
-			<div class="key">H</div>
-			<div class="key">J</div>
-			<div class="key">K</div>
-			<div class="key">L</div>
-			<div class="key">Z</div>
-			<div class="key">X</div>
-			<div class="key">C</div>
-			<div class="key">V</div>
-			<div class="key">B</div>
-			<div class="key">N</div>
-			<div class="key">M</div>
-		</div>
-	</div>
-
-	<div class="music"></div>
-	<div class="life">1</div>
-	<div class="source">0</div>
-	<div class="status"></div>
-	<div class="gameOver">
-		<span>100</span>
-		<div class="btn">
-			继续
-		</div>
-	</div>
-	<div class="clound"></div>
-	<div class="zezhao"></div>
-	<audio src="bgMusic.mp3" autoplay class="audio1"></audio>
-	<audio src="5114.mp3" autoplay class="audio2"></audio>
+    <div class="screen"></div>
+    <div class="keyBox">
+        <div class="keyCon">
+            <div class="btn">Q</div>
+            <div class="btn">W</div>
+            <div class="btn">E</div>
+            <div class="btn">R</div>
+            <div class="btn">T</div>
+            <div class="btn">Y</div>
+            <div class="btn">U</div>
+            <div class="btn">I</div>
+            <div class="btn">O</div>
+            <div class="btn">P</div>
+            <div class="btn">A</div>
+            <div class="btn">S</div>
+            <div class="btn">D</div>
+            <div class="btn">F</div>
+            <div class="btn">G</div>
+            <div class="btn">H</div>
+            <div class="btn">J</div>
+            <div class="btn">K</div>
+            <div class="btn">L</div>
+            <div class="btn">Z</div>
+            <div class="btn">X</div>
+            <div class="btn">C</div>
+            <div class="btn">V</div>
+            <div class="btn">B</div>
+            <div class="btn">N</div>
+            <div class="btn">M</div>
+        </div>
+    </div>
+    <div class="cloud"></div>
+    <ul class="key">
+        <li class="life">10</li>
+        <li class="point">0</li>
+        <li class="c" ></li>
+    </ul>
+    <div class="bgMusic"></div>
+    <div class="zhezhao">
+        <div class="gameOver">
+            <span>0</span>
+            <div class="btn2">
+                重新开始
+            </div>
+        </div>
+    </div>
+    <audio src="bgMusic.mp3" autoplay class="audio1"></audio>
+    <audio src="5114.mp3" class="audio2"></audio>
 </body>
 </html>
